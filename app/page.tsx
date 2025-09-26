@@ -8,6 +8,10 @@ import { LoadingState } from "@/components/ui/loading-spinner"
 import { PageHeader } from "@/components/ui/page-header"
 import { SearchComponent, MobileSearch } from "@/components/search-component"
 
+// ISR Configuration
+export const revalidate = 10 // Revalidate every 10 seconds
+export const dynamic = 'force-static'
+
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">

@@ -191,12 +191,30 @@ export async function getModelsBySubBrand(subBrandId: string) {
 
 export async function getModelBySlug(slug: string) {
 	await connectToDatabase();
-	const model = await Model.findOne({ slug }).lean();
+	const model = await Model.findOne({ slug })
+		.populate({
+			path: "subBrandId",
+			populate: {
+				path: "brandId",
+				select: "name slug",
+			},
+			select: "name slug brandId",
+		})
+		.lean();
+	
 	if (!model) return null;
+	
 	return {
 		...model,
 		_id: model._id.toString(),
-		subBrandId: model.subBrandId.toString(),
+		subBrandId: typeof model.subBrandId === 'object' ? {
+			...model.subBrandId,
+			_id: model.subBrandId._id.toString(),
+			brandId: typeof model.subBrandId.brandId === 'object' ? {
+				...model.subBrandId.brandId,
+				_id: model.subBrandId.brandId._id.toString(),
+			} : model.subBrandId.brandId.toString(),
+		} : model.subBrandId.toString(),
 	};
 }
 
@@ -207,18 +225,43 @@ export async function getModels() {
 			path: "subBrandId",
 			populate: {
 				path: "brandId",
-				select: "name",
+				select: "name slug",
 			},
+			select: "name slug brandId",
 		})
 		.sort({ name: 1 })
 		.lean();
 
-	return models.map((model) => ({
+	return models.map((model: any) => ({
 		...model,
 		_id: model._id.toString(),
 		subBrandId: model.subBrandId._id.toString(),
 		subBrandName: (model.subBrandId as any).name,
+		subBrandSlug: (model.subBrandId as any).slug,
 		brandName: (model.subBrandId as any).brandId.name,
+		brandSlug: (model.subBrandId as any).brandId.slug,
+	}));
+}
+
+// New function for ISR static params generation
+export async function getModelsForStaticGeneration() {
+	await connectToDatabase();
+	const models = await Model.find({})
+		.populate({
+			path: "subBrandId",
+			populate: {
+				path: "brandId",
+				select: "slug",
+			},
+			select: "slug brandId",
+		})
+		.select("slug")
+		.lean();
+
+	return models.map((model: any) => ({
+		modelSlug: model.slug,
+		subBrandSlug: (model.subBrandId as any).slug,
+		brandSlug: (model.subBrandId as any).brandId.slug,
 	}));
 }
 

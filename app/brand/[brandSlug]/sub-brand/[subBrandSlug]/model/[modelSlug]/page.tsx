@@ -1,7 +1,7 @@
-import { getModelBySlug } from "@/lib/db"
+import { getModelBySlug, getModelsForStaticGeneration, getBrandBySlug, getSubBrandBySlug } from "@/lib/db"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import ModelPageClient from "./model-page-client"
 
@@ -13,42 +13,125 @@ interface ModelPageProps {
   }
 }
 
-export default async function ModelPage({ params }: ModelPageProps) {
-  const model = await getModelBySlug(params.modelSlug)
+// ISR Configuration
+export const revalidate = 10 // Revalidate every 10 seconds
+export const dynamic = 'force-static'
 
-  if (!model) {
-    notFound()
+// Generate static params for all models
+export async function generateStaticParams() {
+  try {
+    const modelParams = await getModelsForStaticGeneration()
+    
+    return modelParams.map(param => ({
+      brandSlug: param.brandSlug,
+      subBrandSlug: param.subBrandSlug,
+      modelSlug: param.modelSlug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for models:', error)
+    return []
   }
+}
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <Link href={`/brand/${params.brandSlug}`} className="flex items-center space-x-2 p-2 -m-2 touch-manipulation">
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-sm sm:text-base font-medium">Back</span>
-            </Link>
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm sm:text-lg">T</span>
+// Generate metadata for SEO
+export async function generateMetadata({ params }: ModelPageProps) {
+  try {
+    const modelData = await getModelBySlug(params.modelSlug)
+    
+    if (!modelData) {
+      return {
+        title: 'Model Not Found',
+      }
+    }
+
+    // Type assertion for populated model data
+    const model = modelData as any
+
+    // Extract populated data
+    const subBrand = typeof model.subBrandId === 'object' ? model.subBrandId : null
+    const brand = subBrand && typeof subBrand.brandId === 'object' ? subBrand.brandId : null
+
+    const brandName = brand?.name || 'Unknown Brand'
+    const subBrandName = subBrand?.name || 'Unknown Category'
+
+    return {
+      title: `${model.name} - ${brandName} ${subBrandName} | Tint & Orange`,
+      description: model.description || `Explore the ${model.name} from ${brandName}'s ${subBrandName} collection. View detailed specifications and images.`,
+      openGraph: {
+        title: `${model.name} - ${brandName} ${subBrandName}`,
+        description: model.description || `${model.name} from ${brandName}`,
+        images: model.images && model.images.length > 0 ? [{ url: model.images[0], alt: `${model.name} image` }] : [],
+      },
+    }
+  } catch (error) {
+    console.error('Error generating metadata for model:', error)
+    return {
+      title: 'Model',
+    }
+  }
+}
+
+export default async function ModelPage({ params }: ModelPageProps) {
+  try {
+    const modelData = await getModelBySlug(params.modelSlug)
+    
+    if (!modelData) {
+      return notFound()
+    }
+
+    // Type assertion for populated model data
+    const model = modelData as any
+    
+    // Get sub-brand and brand data for breadcrumbs (fallback if populated data isn't available)
+    const subBrand = typeof model.subBrandId === 'object' ? model.subBrandId : await getSubBrandBySlug(params.subBrandSlug)
+    const brand = subBrand && typeof subBrand.brandId === 'object' ? subBrand.brandId : await getBrandBySlug(params.brandSlug)
+    
+    if (!subBrand || !brand) {
+      return notFound()
+    }
+
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+            <div className="flex items-center justify-between h-12 sm:h-16">
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                <Link href="/" className="text-orange-600 hover:text-orange-700 text-lg sm:text-xl font-bold">
+                  Tint & Orange
+                </Link>
+                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                <Link href={`/brand/${params.brandSlug}`} className="text-gray-600 hover:text-gray-900 text-sm sm:text-base font-medium">
+                  {brand.name}
+                </Link>
+                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                <Link href={`/brand/${params.brandSlug}/sub-brand/${params.subBrandSlug}`} className="text-gray-600 hover:text-gray-900 text-sm sm:text-base font-medium">
+                  {subBrand.name}
+                </Link>
+                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                <span className="text-gray-900 text-sm sm:text-base font-medium">{model.name}</span>
               </div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900">Tint & Orange</h1>
-              </div>
+              <div className="w-8 sm:w-10"></div>
             </div>
-            <div className="w-8 sm:w-10"></div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-8">
-          <ModelPageClient model={model} />
-        </div>
-      </main>
-    </div>
-  )
+        {/* Main Content */}
+        <main className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-8">
+            <ModelPageClient 
+              model={{
+                name: model.name,
+                description: model.description,
+                images: model.images
+              }} 
+            />
+          </div>
+        </main>
+      </div>
+    )
+  } catch (error) {
+    console.error('Error loading model page:', error)
+    return notFound()
+  }
 }

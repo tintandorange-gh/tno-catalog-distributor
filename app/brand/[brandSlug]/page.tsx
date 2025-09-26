@@ -1,4 +1,4 @@
-import { getBrandBySlug, getSubBrandsByBrand } from "@/lib/db"
+import { getBrandBySlug, getSubBrandsByBrand, getBrands } from "@/lib/db"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -10,6 +10,51 @@ import SubBrandList from "@/components/sub-brand-list"
 interface BrandPageProps {
   params: {
     brandSlug: string
+  }
+}
+
+// ISR Configuration
+export const revalidate = 10 // Revalidate every 10 seconds
+export const dynamic = 'force-static'
+
+// Generate static params for all brands
+export async function generateStaticParams() {
+  try {
+    const brands = await getBrands()
+    return brands.map((brand) => ({
+      brandSlug: brand.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for brands:', error)
+    return []
+  }
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ params }: BrandPageProps) {
+  try {
+    const brand = await getBrandBySlug(params.brandSlug)
+    
+    if (!brand) {
+      return {
+        title: 'Brand Not Found',
+      }
+    }
+
+    return {
+      title: `${brand.name} - Car Models | Tint & Orange`,
+      description: `Explore ${brand.name} car models and sub-categories. Browse our comprehensive collection of ${brand.name} vehicles.`,
+      openGraph: {
+        title: `${brand.name} - Car Models`,
+        description: `Discover ${brand.name} car models and categories`,
+        images: brand.logo ? [{ url: brand.logo, alt: `${brand.name} logo` }] : [],
+      },
+    }
+  } catch (error) {
+    console.error('Error generating metadata for brand:', error)
+    return {
+      title: 'Brand',
+    }
   }
 }
 

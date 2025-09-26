@@ -380,33 +380,6 @@ export default function ImageGallery({
           </div>
         </div>
       )}
-
-      {/* Mobile Instructions */}
-      {isMobile && (
-        <div className="absolute top-16 right-2 z-10 text-white text-xs opacity-75 bg-black bg-opacity-50 p-2 rounded max-w-[40vw]">
-          <div className="space-y-1">
-            <div>Tap sides to navigate</div>
-            <div>Pinch to zoom</div>
-            <div>Drag when zoomed</div>
-          </div>
-        </div>
-      )}
-
-      {/* Desktop Instructions */}
-      {!isMobile && (
-        <div className="absolute top-20 right-4 z-10 text-white text-sm opacity-75 bg-black bg-opacity-50 p-3 rounded">
-          <div className="space-y-1">
-            <div>← → Navigate</div>
-            <div>+ - Zoom</div>
-            <div>0 Reset</div>
-            <div>ESC Close</div>
-            <div>Scroll to zoom</div>
-            <div>Drag to pan (when zoomed)</div>
-          </div>
-        </div>
-      )}
-
-      
     </div>
   )
 }
