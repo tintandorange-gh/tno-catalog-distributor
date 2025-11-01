@@ -269,7 +269,9 @@ export async function createModel(
 	name: string,
 	description: string,
 	subBrandId: string,
-	images: string[]
+	images: string[],
+	dealerPricing?: number,
+	distributorPricing?: number
 ) {
 	await connectToDatabase();
 	const slug = name
@@ -278,7 +280,24 @@ export async function createModel(
 		.replace(/\s+/g, "-")
 		.replace(/-+/g, "-")
 		.trim();
-	const model = new Model({ name, slug, description, subBrandId, images });
+
+	const modelData: any = {
+		name,
+		slug,
+		description,
+		subBrandId,
+		images
+	};
+
+	// Add pricing fields if they are valid numbers
+	if (dealerPricing !== undefined && !isNaN(dealerPricing)) {
+		modelData.dealerPricing = dealerPricing;
+	}
+	if (distributorPricing !== undefined && !isNaN(distributorPricing)) {
+		modelData.distributorPricing = distributorPricing;
+	}
+
+	const model = new Model(modelData);
 	const savedModel = await model.save();
 	return savedModel._id.toString();
 }
@@ -288,13 +307,24 @@ export async function updateModel(
 	name: string,
 	description: string,
 	subBrandId: string,
-	images?: string[]
+	images?: string[],
+	dealerPricing?: number,
+	distributorPricing?: number
 ) {
 	await connectToDatabase();
 	const updateData: any = { name, description, subBrandId };
 	if (images && images.length > 0) updateData.images = images;
 
-	await Model.findByIdAndUpdate(id, updateData, { new: true });
+	// Always update pricing fields (even if null to allow clearing values)
+	updateData.dealerPricing = dealerPricing !== undefined && dealerPricing !== null && !isNaN(dealerPricing) ? dealerPricing : null;
+	updateData.distributorPricing = distributorPricing !== undefined && distributorPricing !== null && !isNaN(distributorPricing) ? distributorPricing : null;
+
+	console.log("DB Update - Input:", { dealerPricing, distributorPricing });
+	console.log("DB Update - Final updateData:", updateData);
+
+	const result = await Model.findByIdAndUpdate(id, updateData, { new: true });
+	console.log("DB Update - Result:", result?.dealerPricing, result?.distributorPricing);
+	return result;
 }
 
 export async function deleteModel(id: string) {

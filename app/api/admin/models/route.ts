@@ -20,6 +20,14 @@ export async function POST(request: NextRequest) {
     const subBrandId = formData.get("subBrandId") as string
     const imageFiles = formData.getAll("images") as File[]
 
+    // Parse pricing - handle empty strings and convert to number or undefined
+    const dealerPricingStr = formData.get("dealerPricing") as string
+    const distributorPricingStr = formData.get("distributorPricing") as string
+    const dealerPricing = dealerPricingStr && dealerPricingStr.trim() !== "" ? Number(dealerPricingStr) : undefined
+    const distributorPricing = distributorPricingStr && distributorPricingStr.trim() !== "" ? Number(distributorPricingStr) : undefined
+
+    console.log("Creating model with pricing:", { dealerPricing, distributorPricing })
+
     if (!name || !subBrandId) {
       return NextResponse.json({ error: "Name and sub-brand ID are required" }, { status: 400 })
     }
@@ -37,7 +45,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const modelId = await createModel(name, description, subBrandId, imageUrls)
+    const modelId = await createModel(name, description, subBrandId, imageUrls, dealerPricing, distributorPricing)
     return NextResponse.json({ id: modelId })
   } catch (error) {
     console.error("Error creating model:", error)

@@ -26,6 +26,8 @@ export interface ModelType {
   subBrandName?: string
   brandName?: string
   images: string[]
+  dealerPricing?: number
+  distributorPricing?: number
   createdAt: Date
   updatedAt: Date
 }

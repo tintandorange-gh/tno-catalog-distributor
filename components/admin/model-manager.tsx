@@ -36,6 +36,8 @@ interface Model {
   subBrandName: string
   brandName: string
   images: string[]
+  dealerPricing?: number
+  distributorPricing?: number
 }
 
 interface ModelManagerProps {
@@ -55,6 +57,8 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
     brandId: "",
     subBrandId: "",
     images: [] as File[],
+    dealerPricing: "",
+    distributorPricing: "",
   })
   const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
@@ -140,6 +144,19 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
       formDataToSend.append("description", formData.description.trim())
       formDataToSend.append("subBrandId", formData.subBrandId)
 
+      // Add pricing fields
+      console.log("Form pricing values:", {
+        dealerPricing: formData.dealerPricing,
+        distributorPricing: formData.distributorPricing
+      })
+
+      if (formData.dealerPricing.trim()) {
+        formDataToSend.append("dealerPricing", formData.dealerPricing.trim())
+      }
+      if (formData.distributorPricing.trim()) {
+        formDataToSend.append("distributorPricing", formData.distributorPricing.trim())
+      }
+
       // Add new images
       formData.images.forEach((image) => {
         formDataToSend.append("images", image)
@@ -181,7 +198,7 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
   }
 
   const resetForm = () => {
-    setFormData({ name: "", description: "", brandId: "", subBrandId: "", images: [] })
+    setFormData({ name: "", description: "", brandId: "", subBrandId: "", images: [], dealerPricing: "", distributorPricing: "" })
     setExistingImages([])
     setImagesToRemove([])
     cleanupPreviewUrls()
@@ -226,6 +243,8 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
       brandId: subBrand?.brandId || "",
       subBrandId: model.subBrandId,
       images: [],
+      dealerPricing: model.dealerPricing?.toString() || "",
+      distributorPricing: model.distributorPricing?.toString() || "",
     })
     setExistingImages(model.images || [])
     setImagesToRemove([])
@@ -398,6 +417,38 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
                   disabled={loading}
                   className="min-h-[80px] sm:min-h-[90px]"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dealerPricing">Dealer Pricing (₹)</Label>
+                  <Input
+                    id="dealerPricing"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formData.dealerPricing}
+                    onChange={(e) => setFormData({ ...formData, dealerPricing: e.target.value })}
+                    placeholder="Enter dealer price"
+                    disabled={loading}
+                    className="h-10 sm:h-11"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="distributorPricing">Distributor Pricing (₹)</Label>
+                  <Input
+                    id="distributorPricing"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formData.distributorPricing}
+                    onChange={(e) => setFormData({ ...formData, distributorPricing: e.target.value })}
+                    placeholder="Enter distributor price"
+                    disabled={loading}
+                    className="h-10 sm:h-11"
+                  />
+                </div>
               </div>
 
               {/* Existing Images (Edit Mode) */}
@@ -577,6 +628,14 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
                             {model.description}
                           </p>
                         )}
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                            Dealer: {model.dealerPricing ? `₹${model.dealerPricing.toLocaleString('en-IN')}` : 'N/A'}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                            Distributor: {model.distributorPricing ? `₹${model.distributorPricing.toLocaleString('en-IN')}` : 'N/A'}
+                          </Badge>
+                        </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <ImageIcon className="h-3 w-3" />
                           {model.images.length} image{model.images.length !== 1 ? 's' : ''}

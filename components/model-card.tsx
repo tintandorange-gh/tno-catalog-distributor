@@ -14,6 +14,8 @@ interface ModelCardProps {
     slug: string
     description?: string
     images?: string[]
+    dealerPricing?: number
+    distributorPricing?: number
   }
   brandSlug: string
   subBrandSlug: string
@@ -59,10 +61,22 @@ export function ModelCard({ model, brandSlug, subBrandSlug }: ModelCardProps) {
                   {model.description}
                 </p>
               )}
-              <div className="flex items-center gap-1 sm:gap-2">
-                <Badge variant="outline" className="text-xs">
-                  View Details
-                </Badge>
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                {model.dealerPricing && (
+                  <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                    Dealer: ₹{model.dealerPricing.toLocaleString('en-IN')}
+                  </Badge>
+                )}
+                {model.distributorPricing && (
+                  <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                    Dist: ₹{model.distributorPricing.toLocaleString('en-IN')}
+                  </Badge>
+                )}
+                {!model.dealerPricing && !model.distributorPricing && (
+                  <Badge variant="outline" className="text-xs">
+                    View Details
+                  </Badge>
+                )}
                 {model.images && model.images.length > 1 && (
                   <Badge variant="secondary" className="text-xs">
                     {model.images.length} images

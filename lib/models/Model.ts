@@ -6,6 +6,8 @@ export interface IModel extends Document {
 	description?: string;
 	subBrandId: mongoose.Types.ObjectId;
 	images: string[];
+	dealerPricing?: number;
+	distributorPricing?: number;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -41,6 +43,16 @@ const ModelSchema: Schema = new Schema(
 				},
 			},
 		],
+		dealerPricing: {
+			type: Number,
+			min: 0,
+			default: null,
+		},
+		distributorPricing: {
+			type: Number,
+			min: 0,
+			default: null,
+		},
 	},
 	{
 		timestamps: true,

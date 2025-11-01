@@ -9,6 +9,8 @@ interface ModelPageClientProps {
     name: string
     description?: string
     images?: string[]
+    dealerPricing?: number
+    distributorPricing?: number
   }
 }
 
@@ -23,9 +25,30 @@ export default function ModelPageClient({ model }: ModelPageClientProps) {
 
   return (
     <>
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-8 text-center px-4">{model.name}</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center px-4">{model.name}</h1>
 
-      {model.description && <p className="text-gray-600 mb-4 sm:mb-8 text-center text-sm sm:text-base px-4">{model.description}</p>}
+      {model.description && <p className="text-gray-600 mb-4 sm:mb-6 text-center text-sm sm:text-base px-4">{model.description}</p>}
+
+      {/* Pricing Section */}
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 sm:mb-8 px-4 justify-center items-center">
+        <div className="bg-white border-2 border-green-200 rounded-lg p-4 sm:p-6 shadow-sm min-w-[280px] sm:min-w-[320px]">
+          <div className="text-center">
+            <p className="text-sm sm:text-base text-gray-600 mb-2">Dealer Pricing</p>
+            <p className="text-2xl sm:text-3xl font-bold text-green-700">
+              {model.dealerPricing ? `₹${model.dealerPricing.toLocaleString('en-IN')}` : 'N/A'}
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white border-2 border-blue-200 rounded-lg p-4 sm:p-6 shadow-sm min-w-[280px] sm:min-w-[320px]">
+          <div className="text-center">
+            <p className="text-sm sm:text-base text-gray-600 mb-2">Distributor Pricing</p>
+            <p className="text-2xl sm:text-3xl font-bold text-blue-700">
+              {model.distributorPricing ? `₹${model.distributorPricing.toLocaleString('en-IN')}` : 'N/A'}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Images Grid */}
       {model.images && model.images.length > 0 && (

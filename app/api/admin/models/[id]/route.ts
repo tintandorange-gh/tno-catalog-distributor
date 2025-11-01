@@ -10,6 +10,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const subBrandId = formData.get("subBrandId") as string
     const imageFiles = formData.getAll("images") as File[]
 
+    // Parse pricing - handle empty strings and convert to number or undefined
+    const dealerPricingStr = formData.get("dealerPricing") as string
+    const distributorPricingStr = formData.get("distributorPricing") as string
+    const dealerPricing = dealerPricingStr && dealerPricingStr.trim() !== "" ? Number(dealerPricingStr) : undefined
+    const distributorPricing = distributorPricingStr && distributorPricingStr.trim() !== "" ? Number(distributorPricingStr) : undefined
+
+    console.log("Updating model with pricing:", { dealerPricing, distributorPricing, dealerPricingStr, distributorPricingStr })
+
     let imageUrls = undefined
     if (imageFiles.length > 0) {
       imageUrls = []
@@ -22,7 +30,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       }
     }
 
-    await updateModel(params.id, name, description, subBrandId, imageUrls)
+    await updateModel(params.id, name, description, subBrandId, imageUrls, dealerPricing, distributorPricing)
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({ error: "Failed to update model" }, { status: 500 })

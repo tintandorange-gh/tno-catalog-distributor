@@ -81,7 +81,13 @@ export default async function ModelPage({ params }: ModelPageProps) {
 
     // Type assertion for populated model data
     const model = modelData as any
-    
+
+    console.log("Model data from DB:", {
+      name: model.name,
+      dealerPricing: model.dealerPricing,
+      distributorPricing: model.distributorPricing
+    })
+
     // Get sub-brand and brand data for breadcrumbs (fallback if populated data isn't available)
     const subBrand = typeof model.subBrandId === 'object' ? model.subBrandId : await getSubBrandBySlug(params.subBrandSlug)
     const brand = subBrand && typeof subBrand.brandId === 'object' ? subBrand.brandId : await getBrandBySlug(params.brandSlug)
@@ -119,12 +125,14 @@ export default async function ModelPage({ params }: ModelPageProps) {
         {/* Main Content */}
         <main className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-8">
-            <ModelPageClient 
+            <ModelPageClient
               model={{
                 name: model.name,
                 description: model.description,
-                images: model.images
-              }} 
+                images: model.images,
+                dealerPricing: model.dealerPricing,
+                distributorPricing: model.distributorPricing
+              }}
             />
           </div>
         </main>
