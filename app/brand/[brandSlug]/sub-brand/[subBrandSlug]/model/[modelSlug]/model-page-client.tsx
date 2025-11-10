@@ -50,7 +50,7 @@ export default function ModelPageClient({ model }: ModelPageClientProps) {
 					</div>
 				</div>
 
-				{/* <div className="bg-white border-2 border-blue-200 rounded-lg p-4 sm:p-6 shadow-sm min-w-[280px] sm:min-w-[320px]">
+				<div className="bg-white border-2 border-blue-200 rounded-lg p-4 sm:p-6 shadow-sm min-w-[280px] sm:min-w-[320px]">
 					<div className="text-center">
 						<p className="text-sm sm:text-base text-gray-600 mb-2">
 							Distributor Pricing
@@ -61,7 +61,7 @@ export default function ModelPageClient({ model }: ModelPageClientProps) {
 								: "N/A"}
 						</p>
 					</div>
-				</div> */}
+				</div>
 			</div>
 
 			{/* Images Grid */}
