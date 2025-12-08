@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import Link from "next/link"
-import { ArrowLeft, Car } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import LoginForm from "@/components/admin/login-form"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -34,7 +35,7 @@ export default async function AdminPage() {
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 shadow-lg">
-              <Car className="h-8 w-8 text-white" />
+              <Logo className="h-8 w-8 text-white" />
             </div>
             <h2 className="text-3xl font-bold">Admin Portal</h2>
             <p className="mt-2 text-sm text-muted-foreground">

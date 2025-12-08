@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
-import { Plus, Edit, Trash2, Upload, AlertCircle, Car, X } from "lucide-react"
+import { Plus, Edit, Trash2, Upload, AlertCircle, X } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -207,7 +208,7 @@ export default function BrandManager({ onUpdate }: BrandManagerProps) {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <Car className="h-5 w-5" />
+            <Logo className="h-5 w-5" />
             Brand Management
           </CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
@@ -321,7 +322,7 @@ export default function BrandManager({ onUpdate }: BrandManagerProps) {
       <CardContent>
         {brands.length === 0 ? (
           <div className="text-center py-8">
-            <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <Logo className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No brands yet</h3>
             <p className="text-muted-foreground mb-4">
               Get started by adding your first car brand

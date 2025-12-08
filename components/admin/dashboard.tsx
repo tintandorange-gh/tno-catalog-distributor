@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Car, LogOut, Home, BarChart3, Layers, Settings } from "lucide-react"
+import { LogOut, Home, BarChart3, Layers, Settings } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -71,7 +72,7 @@ export default function AdminDashboard() {
         <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-2 sm:px-4">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-500">
-              <Car className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+              <Logo className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg sm:text-xl font-bold">Admin Dashboard</h1>
@@ -123,7 +124,7 @@ export default function AdminDashboard() {
               <Card className="hover:shadow-md transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    <Car className="h-4 w-4" />
+                    <Logo className="h-4 w-4" />
                     Total Brands
                   </CardTitle>
                   <Badge variant="secondary">{stats.brands}</Badge>
@@ -173,7 +174,7 @@ export default function AdminDashboard() {
             <Tabs defaultValue="brands" className="space-y-4 sm:space-y-6">
               <TabsList className="grid w-full grid-cols-3 h-auto">
                 <TabsTrigger value="brands" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3">
-                  <Car className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <Logo className="h-3 w-3 sm:h-4 sm:w-4" />
                   <span className="hidden xs:inline">Brands</span>
                   <span className="xs:hidden">B</span>
                 </TabsTrigger>

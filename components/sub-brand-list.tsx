@@ -1,6 +1,7 @@
 import { getModelsBySubBrand } from "@/lib/db"
 import Link from "next/link"
-import { Car, Tag } from "lucide-react"
+import { Tag } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -85,7 +86,7 @@ export default async function SubBrandList({ brandId, brandSlug, subBrands }: Su
             <CardContent>
               {subBrand.models.length === 0 ? (
                 <div className="text-center py-6 sm:py-8">
-                  <Car className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground mx-auto mb-2" />
+                  <Logo className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground mx-auto mb-2" />
                   <p className="text-muted-foreground text-sm sm:text-base">No models in this category yet</p>
                 </div>
               ) : (

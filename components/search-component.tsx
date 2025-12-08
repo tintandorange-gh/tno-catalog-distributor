@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search, X, Car, Tag } from 'lucide-react'
+import { Search, X, Tag } from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -89,11 +90,11 @@ export function SearchComponent({ placeholder = "Search brands, models...", clas
   const getResultIcon = (type: string) => {
     switch (type) {
       case 'brand':
-        return <Car className="h-4 w-4" />
+        return <Logo className="h-4 w-4" />
       case 'subBrand':
         return <Tag className="h-4 w-4" />
       case 'model':
-        return <Car className="h-4 w-4" />
+        return <Logo className="h-4 w-4" />
       default:
         return <Search className="h-4 w-4" />
     }

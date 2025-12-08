@@ -2,7 +2,8 @@ import { getBrandBySlug, getSubBrandsByBrand, getBrands } from "@/lib/db"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Car, Settings } from "lucide-react"
+import { ArrowLeft, Settings } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import SubBrandList from "@/components/sub-brand-list"
@@ -82,7 +83,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
           
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-500">
-              <Car className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+              <Logo className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg sm:text-xl font-bold">Tint & Orange</h1>

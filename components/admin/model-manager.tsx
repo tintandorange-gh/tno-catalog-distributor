@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Edit, Trash2, X, Upload, ImageIcon, Car, Settings, AlertCircle } from "lucide-react"
+import { Plus, Edit, Trash2, X, Upload, ImageIcon, Settings, AlertCircle } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { LoadingSpinner, LoadingState } from "@/components/ui/loading-spinner"
@@ -577,7 +578,7 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
       <CardContent>
         {models.length === 0 ? (
           <div className="text-center py-8">
-            <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <Logo className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No models yet</h3>
             <p className="text-muted-foreground mb-4">
               Start by adding your first car model
@@ -610,7 +611,7 @@ export default function ModelManager({ onUpdate }: ModelManagerProps) {
                             />
                           </div>
                         ) : (
-                          <Car className="h-6 w-6 text-primary" />
+                          <Logo className="h-6 w-6 text-primary" />
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
